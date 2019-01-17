@@ -1,3 +1,4 @@
+package week2;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -96,23 +97,7 @@ public class Deque<Item> implements Iterable<Item> {
                                        // from front to end
         return new DequeIterator<Item>(this);
 
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        if (!this.isEmpty()) {
-            Iterator<Item> iterator = this.iterator();
-            while (iterator.hasNext()) {
-                sb.append(iterator.next());
-                sb.append(",");
-            }
-        }
-        sb.append("]");
-        return sb.toString();
-
-    }
+    }   
 
     public static void main(String[] args) {
         // unit testing (optional)
@@ -126,25 +111,22 @@ public class Deque<Item> implements Iterable<Item> {
         private DequeIterator(Deque<Item> collection) {
 
             this.collection = collection;
-            this.node = collection.first.previous;
+            this.node = collection.first;
 
         }
 
         @Override
         public boolean hasNext() {
-            return ((this.node != null && this.node.next != null) || (this.node == null && collection.first != null)) ? true : false;
+            return (this.node != null) ? true : false;
         }
 
         @Override
         public Item next() {
-            if (this.node != null && this.node.next != null) {
-                this.node = this.node.next;
-                return node.item;
-            } else if (this.node == null && collection.first != null) {
-                this.node = collection.first;
-                return node.item;
-            } else
+            if (node == null)
                 throw new NoSuchElementException();
+            Item item = node.item;
+            node = node.next;
+            return item;
         }
 
         @Override
