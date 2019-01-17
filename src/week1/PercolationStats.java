@@ -12,8 +12,7 @@ public class PercolationStats {
     {
         if (n <= 0 || trials <= 0)
             throw new IllegalArgumentException();
-        this.thresholds = new double[trials];
-        // TODO run Percolation trial times
+        this.thresholds = new double[trials];       
         for (int trial = 0; trial < trials; trial++) {
             Percolation percolation = new Percolation(n);
             while (true) {
