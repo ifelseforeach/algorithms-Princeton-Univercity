@@ -10,12 +10,14 @@
  ******************************************************************************/
 
 import java.util.Comparator;
+
 import edu.princeton.cs.algs4.StdDraw;
 
 public class Point implements Comparable<Point> {
 
     private final int x; // x-coordinate of this point
     private final int y; // y-coordinate of this point
+    private double slope;
 
     /**
      * Initializes a new point.
@@ -65,7 +67,7 @@ public class Point implements Comparable<Point> {
         if (that.x == this.x)
             return Double.POSITIVE_INFINITY;
         if (that.y == this.y)
-            return 0.0;
+            return +0.0;
         else
             return 1.0 * (that.y - this.y) / (that.x - this.x);
     }
@@ -104,9 +106,9 @@ public class Point implements Comparable<Point> {
     }
 
     private class PointComparator implements Comparator<Point> {
-        
+
         Point p0;
-        
+
         PointComparator(Point p0) {
             this.p0 = p0;
         }
@@ -116,10 +118,7 @@ public class Point implements Comparable<Point> {
             // TODO Auto-generated method stub
             if (arg0 == null || arg1 == null || this.p0 == null)
                 throw new NullPointerException();
-            if (p0.slopeTo(arg0) == p0.slopeTo(arg1))
-                return 0;
-            else 
-                return (p0.slopeTo(arg0) > p0.slopeTo(arg1)) ? 1 : -1;
+            return Double.compare(p0.slopeTo(arg0), p0.slopeTo(arg1));
         }
 
     }
@@ -136,16 +135,14 @@ public class Point implements Comparable<Point> {
         return "(" + x + ", " + y + ")";
     }
 
-    /**
-     * Unit tests the Point data type.
-     */
-    public static void main(String[] args) {
-        Point p = new Point(0, 10000);
-        Point q = new Point(0, 10000);
-        Point r = new Point(250, 104);
-        Point s = new Point(250, 104);
-       
-        Comparator<Point> comparator = p.slopeOrder();
-        System.out.println(p.compareTo(q) == 0);
+    public double getSlope() {
+        return slope;
     }
+
+    public void setSlope(double slope) {
+        this.slope = slope;
+    }
+    
+    
+
 }
