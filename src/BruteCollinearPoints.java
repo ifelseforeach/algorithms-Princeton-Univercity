@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.princeton.cs.algs4.Merge;
+import edu.princeton.cs.algs4.Quick;
+
 public class BruteCollinearPoints {
 
     private int numberOfSegments = 0;
@@ -8,7 +11,7 @@ public class BruteCollinearPoints {
 
     public BruteCollinearPoints(Point[] points) { // finds all line segments
 
-        if (points == null || points.length < 1)
+        if (points == null || containsRepeatedPoint(points))
             throw new NullPointerException();
 
         // containing 4 points
@@ -31,6 +34,28 @@ public class BruteCollinearPoints {
         }
     }
 
+    private boolean containsRepeatedPoint(Point[] points) {
+        Merge.sort(points);
+        for (int i = 0; i < points.length - 1; i++) {
+            if (points[i].toString().equals(points[i + 1].toString()))
+                return true;
+        }
+        return false;
+
+    }
+
+    private void addLine(List<Point> aux) {
+
+        Point[] auxArr = new Point[aux.size()];
+        auxArr = aux.toArray(auxArr);
+        Quick.sort(auxArr);
+        LineSegment segment = new LineSegment(auxArr[0], auxArr[auxArr.length - 1]);
+        if (isLineSegmentExist(segment))
+            return;
+        this.numberOfSegments++;
+        segments.add(segment);
+    }
+
     public int numberOfSegments() { // the number of line segments
         // TODO
         return this.numberOfSegments;
@@ -38,57 +63,33 @@ public class BruteCollinearPoints {
     }
 
     public LineSegment[] segments() { // the line segments
+
         if (segments.isEmpty())
             return new LineSegment[0];
         LineSegment[] arr = new LineSegment[segments.size()];
         return segments.toArray(arr);
+    }
 
+    private boolean isLineSegmentExist(LineSegment checkSegment) {
+        for (LineSegment segment : this.segments) {
+            if (segment.toString().equals(checkSegment.toString()))
+                return true;
+        }
+        return false;
     }
 
     private void checkAndAddCollinear(Point p, Point q, Point r, Point s) {
 
-        if (Double.compare(p.slopeTo(q), p.slopeTo(r)) == 1 && Double.compare(p.slopeTo(q), p.slopeTo(s)) == 1) {
-            if (p.slopeTo(q) == Double.NEGATIVE_INFINITY)
-                return;
-            Point[] points = new Point[4];
-            points[0] = p;
-            points[1] = q;
-            points[2] = r;
-            points[3] = s;
+        if (Double.compare(p.slopeTo(q), p.slopeTo(r)) == 0 && Double.compare(p.slopeTo(q), p.slopeTo(s)) == 0) {
 
-            // System.out.println("Trying to make a line from " + p.toString() +
-            // ", " + q.toString() + ", "+ r.toString() + ", "+ s.toString());
-            LineSegment line = createLine(points);
-            addLine(line);
+            List<Point> aux = new ArrayList<Point>();
+            aux.add(p);
+            aux.add(q);
+            aux.add(r);
+            aux.add(s);
+            addLine(aux);
         }
 
     }
 
-    private void addLine(LineSegment line) {
-
-        if (!segments.isEmpty()) {
-            for (LineSegment segment : segments) {
-                if (segment.toString().equals(line.toString()))
-                    return;
-            }
-        }
-        segments.add(line);
-        numberOfSegments++;
-
-    }
-
-    private LineSegment createLine(Point[] points) {
-        // TODO Auto-generated method stub
-        Point max = points[0];
-        Point min = points[0];
-        for (int i = 1; i < points.length; i++) {
-            if (points[i].compareTo(max) > 0)
-                max = points[i];
-            if (points[i].compareTo(min) < 0)
-                min = points[i];
-        }
-        // System.out.println("Made a line " + min.toString() + ", " +
-        // max.toString());
-        return new LineSegment(min, max);
-    }
 }

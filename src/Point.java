@@ -17,7 +17,6 @@ public class Point implements Comparable<Point> {
 
     private final int x; // x-coordinate of this point
     private final int y; // y-coordinate of this point
-    private double slope;
 
     /**
      * Initializes a new point.
@@ -134,15 +133,5 @@ public class Point implements Comparable<Point> {
         /* DO NOT MODIFY */
         return "(" + x + ", " + y + ")";
     }
-
-    public double getSlope() {
-        return slope;
-    }
-
-    public void setSlope(double slope) {
-        this.slope = slope;
-    }
-    
-    
 
 }
