@@ -1,6 +1,6 @@
+package week3;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import edu.princeton.cs.algs4.Quick;
@@ -10,16 +10,6 @@ public class FastCollinearPoints {
     private int numberOfSegments = 0;
     private final List<LineSegment> segments = new ArrayList<LineSegment>();
 
-    private final static class PointWithSlope {
-        double slope;
-        Point p;
-
-        PointWithSlope(Point origin, Point p) {
-            this.slope = origin.slopeTo(p);
-            this.p = p;
-        }
-    }
-
     public FastCollinearPoints(Point[] points) { // finds all line segments
                                                  // containing 4 or more points
         if (points == null)
@@ -27,30 +17,22 @@ public class FastCollinearPoints {
         if (points.length < 4)
             return;
 
-        // Point[] aux = Arrays.copyOf(points, points.length);
-        PointWithSlope[] aux = new PointWithSlope[points.length];
+        Point[] aux = Arrays.copyOf(points, points.length);
+
         for (Point origin : points) {
 
-            for (int i = 0; i < points.length; i++) {
-                aux[i] = new PointWithSlope(origin, points[i]);
-            }
-            Arrays.sort(aux, new Comparator<PointWithSlope>() {
-                @Override
-                public int compare(PointWithSlope emp1, PointWithSlope emp2) {
-                    return Double.compare(emp1.slope, emp2.slope);
-                }
-            });
-
+            Arrays.sort(aux, origin.slopeOrder());
             int count = 1;
             int coursor = 0;
             List<Point> line = new ArrayList<Point>();
             line.add(origin);
-            line.add(aux[coursor].p);
+            line.add(aux[coursor]);
+
             for (int i = 1; i < aux.length; i++) {
 
-                if (Double.compare(aux[coursor].slope, aux[i].slope) == 0) {
+                if (origin.slopeTo(aux[coursor]) == origin.slopeTo(aux[i])) {
                     count++;
-                    line.add(aux[i].p);
+                    line.add(aux[i]);
                     // Corner conditions
                     if (i == aux.length - 1 && count >= 3) {
                         addLine(line);
@@ -64,9 +46,9 @@ public class FastCollinearPoints {
 
                     count = 1;
                     coursor = i;
-                    line = new ArrayList<Point>();
+                    line.removeAll(line);
                     line.add(origin);
-                    line.add(aux[coursor].p);
+                    line.add(aux[coursor]);
                 }
 
             }
@@ -75,7 +57,7 @@ public class FastCollinearPoints {
     }
 
     private void addLine(List<Point> aux) {
-       
+
         Point[] auxArr = new Point[aux.size()];
         auxArr = aux.toArray(auxArr);
         Quick.sort(auxArr);

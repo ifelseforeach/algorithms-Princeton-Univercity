@@ -1,3 +1,4 @@
+package week3;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class BruteCollinearPoints {
     public BruteCollinearPoints(Point[] points) { // finds all line segments
 
         if (points == null || containsRepeatedPoint(points))
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
 
         // containing 4 points
         if (points.length >= 4) {
